@@ -1,5 +1,6 @@
 import renderUsers from './renderUsers'
 import service from './service'
+import setFormEventData from './set-form-event-data'
 
 async function refresh() {
   const app = document.querySelector('#app')
@@ -11,42 +12,41 @@ async function refresh() {
 export default async function renderApp() {
   await refresh()
 
-  window.addEventListener('submit', async e => {
-    e.preventDefault()
+  const eventsByEventName = {
+    submit: {
+      name: setFormEventData({
+        items: ['name'],
+        on: ({ id, name }) => service.updateUser(id, { name })
+      }),
+      point: setFormEventData({
+        items: ['point-id', 'point'],
+        on: ({ pointId, point }) => service.updatePoint(pointId, +point)
+      }),
+      activated: setFormEventData({
+        items: ['activated'],
+        on: ({ id, activated }) => service.updateUser(id, { activated: JSON.parse(activated) })
+      }),
+    },
+    reset: {
+      point: setFormEventData({
+        items: ['point-id'],
+        on: ({ pointId }) => service.clearPoint(pointId)
+      }),
+    },
+  }
+  const events = Object.keys(eventsByEventName)
 
-    const form = e.target
-    const formElements = form.elements
-    const id = form.dataset.id
-    const type = form.dataset.type
+  events.forEach(event => {
+    window.addEventListener(event, async e => {
+      e.preventDefault()
 
-    if (type === 'name') {
-      const name = formElements.namedItem('name').value
+      const form = e.target
+      const type = form.dataset.type
+      const formEventDatas = eventsByEventName[event][type]
+
+      await formEventDatas.emit(form)
       
-      await service.updateUser(id, { name })
-    } else if (type === 'point') {
-      const point = +formElements.namedItem('point').value
-
-      await service.updatePoint(id, point)
-    } else if (type === 'activated') {
-      const activated = JSON.parse(formElements.namedItem('activated').value)
-
-      await service.updateUser(id, { activated })
-    }
-
-    refresh()
-  })
-
-  window.addEventListener('reset', async e => {
-    e.preventDefault()
-
-    const form = e.target
-    const id = form.dataset.id
-    const type = form.dataset.type
-
-    if (type === 'point') {
-      await service.clearPoint(id)
-    }
-
-    refresh()
+      refresh()
+    })
   })
 }
