@@ -1,4 +1,4 @@
-import { afterEach, expect, vi } from 'vitest'
+import { afterEach, expect, expectTypeOf, vi } from 'vitest'
 import service from '../service'
 import renderApp from '../app'
 import db from '../../db/db.json'
