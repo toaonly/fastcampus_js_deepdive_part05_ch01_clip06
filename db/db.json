@@ -1,0 +1,56 @@
+{
+  "users": [
+    {
+      "id": "1f6db043-efb2-4d70-8966-fb167defecbc",
+      "name": "김민준",
+      "point": "c0b29aeb-3a3e-4100-9d2f-fdd4f14f7657",
+      "activated": true
+    },
+    {
+      "id": "2ec4b516-07b4-489e-a5dc-2c5cf3186c08",
+      "name": "이서윤",
+      "point": "f58aa48d-77a4-4b74-aed9-2d3b9aafc1f8",
+      "activated": true
+    },
+    {
+      "id": "06484de5-af62-4eec-8d8b-07a65dcb3fcf",
+      "name": "박도윤",
+      "point": "5829469e-8608-4b5b-a862-321c5a76e035",
+      "activated": false
+    },
+    {
+      "id": "0e389f05-9568-42b7-bc1f-8e4dc4a45cf5",
+      "name": "최하윤",
+      "point": "cf15c6d3-e4e4-47e1-97e7-1d3af60222d1",
+      "activated": true
+    },
+    {
+      "id": "34ad637b-f95e-49c1-b6c0-cfc698b3f45c",
+      "name": "정지후",
+      "point": "0cf8e905-0bbe-4b3e-9cd6-97e290a1a5a8",
+      "activated": true
+    }
+  ],
+  "points": [
+    {
+      "id": "c0b29aeb-3a3e-4100-9d2f-fdd4f14f7657",
+      "value": 45
+    },
+    {
+      "id": "f58aa48d-77a4-4b74-aed9-2d3b9aafc1f8",
+      "value": 82
+    },
+    {
+      "id": "5829469e-8608-4b5b-a862-321c5a76e035",
+      "value": 23
+    },
+    {
+      "id": "cf15c6d3-e4e4-47e1-97e7-1d3af60222d1",
+      "value": 67
+    },
+    {
+      "id": "0cf8e905-0bbe-4b3e-9cd6-97e290a1a5a8",
+      "value": 56
+    }
+  ]
+}

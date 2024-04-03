@@ -1,121 +1,52 @@
-export default function renderApp() {
+import renderUsers from './renderUsers'
+import service from './service'
+
+async function refresh() {
   const app = document.querySelector('#app')
 
-  app.innerHTML += `
-    <div class="flex divide-x">
-      <div class="p-8">
-        <button id="btn-find" class="px-3 py-2 rounded-md bg-blue-600 text-sm text-white">Location: Seoul 찾기</button>
+  app.innerHTML = '<div class="mx-auto my-16 w-fit text-xl">Loading...</div>'
+  app.innerHTML = renderUsers(await service.getUsers())
+}
 
-        <div class="group flex flex-col gap-2 p-4">
-          <div>
-            <div>
-              <div class="font-semibold group-name">Name: Alpha</div>
-              <div class="text-sm group-location">Location: New York</div>
-            </div>
-            <div class="group flex flex-col gap-2 p-4">
-              <div>
-                <div>
-                  <div class="font-semibold group-name">Name: Beta</div>
-                  <div class="text-sm group-location">Location: Seoul</div>
-                </div>
-                <div class="group flex flex-col gap-2 p-4">
-                  <div>
-                    <div>
-                      <div class="font-semibold group-name">Name: Delta</div>
-                      <div class="text-sm group-location">Location: New York</div>
-                    </div>
-                    <div class="group flex flex-col gap-2 p-4">
-                      <div>
-                        <div>
-                          <div class="font-semibold group-name">Name: Epsilon</div>
-                          <div class="text-sm group-location">Location: Berlin</div>
-                        </div>
-                      </div>
-                      <div>
-                        <div>
-                          <div class="font-semibold group-name">Name: Zeta</div>
-                          <div class="text-sm group-location">Location: London</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <div class="font-semibold group-name">Name: Gamma</div>
-                      <div class="text-sm group-location">Location: Seoul</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div>
-                  <div class="font-semibold group-name">Name: Theta</div>
-                  <div class="text-sm group-location">Location: Berlin</div>
-                </div>
-                <div class="group flex flex-col gap-2 p-4">
-                  <div>
-                    <div>
-                      <div class="font-semibold group-name">Name: Iota</div>
-                      <div class="text-sm group-location">Location: New York</div>
-                    </div>
-                    <div class="group flex flex-col gap-2 p-4">
-                      <div>
-                        <div>
-                          <div class="font-semibold group-name">Name: Kappa</div>
-                          <div class="text-sm group-location">Location: Seoul</div>
-                        </div>
-                        <div class="group flex flex-col gap-2 p-4">
-                          <div>
-                            <div>
-                              <div class="font-semibold group-name">Name: Lambda</div>
-                              <div class="text-sm group-location">Location: Berlin</div>
-                            </div>
-                          </div>
-                          <div>
-                            <div>
-                              <div class="font-semibold group-name">Name: Mu</div>
-                              <div class="text-sm group-location">Location: London</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+export default async function renderApp() {
+  await refresh()
 
-      <div class="p-8">1</div>
-    </div>
-  `
+  window.addEventListener('submit', async e => {
+    e.preventDefault()
 
-  const findAllSeoulAndMarkYellow = () => {
-    function search(elements) {
-      for (let i = 0; i < elements.length; i++) {
-        const el = elements[i]
+    const form = e.target
+    const formElements = form.elements
+    const id = form.dataset.id
+    const type = form.dataset.type
 
-        if (el.textContent === 'Location: Seoul') {
-          el.classList.add('bg-yellow-200')
-          el.classList.add('transition-colors')
+    if (type === 'name') {
+      const name = formElements.namedItem('name').value
+      
+      await service.updateUser(id, { name })
+    } else if (type === 'point') {
+      const point = +formElements.namedItem('point').value
 
-          setTimeout(() => {
-            el.classList.remove('bg-yellow-200')
-          }, 2000)
-        }
+      await service.updatePoint(id, point)
+    } else if (type === 'activated') {
+      const activated = JSON.parse(formElements.namedItem('activated').value)
 
-        search(el.childNodes)
-      }
+      await service.updateUser(id, { activated })
     }
 
-    search([app])
-  }
+    refresh()
+  })
 
-  const btnFind = document.querySelector('#btn-find')
+  window.addEventListener('reset', async e => {
+    e.preventDefault()
 
-  btnFind.addEventListener('click', () => {
-    findAllSeoulAndMarkYellow()
+    const form = e.target
+    const id = form.dataset.id
+    const type = form.dataset.type
+
+    if (type === 'point') {
+      await service.clearPoint(id)
+    }
+
+    refresh()
   })
 }
