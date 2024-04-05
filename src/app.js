@@ -1,6 +1,6 @@
 import renderUsers from './renderUsers'
 import service from './service'
-import setFormEventData from './set-form-event-data'
+import setFormEventData from './setFormEventData'
 
 async function refresh() {
   const app = document.querySelector('#app')
@@ -16,21 +16,21 @@ export default async function renderApp() {
     submit: {
       name: setFormEventData({
         items: ['name'],
-        on: ({ id, name }) => service.updateUser(id, { name })
+        on: ({ id, name }) => service.updateUser(id, { name }),
       }),
       point: setFormEventData({
         items: ['point-id', 'point'],
-        on: ({ pointId, point }) => service.updatePoint(pointId, +point)
+        on: ({ pointId, point }) => service.updatePoint(pointId, +point),
       }),
       activated: setFormEventData({
         items: ['activated'],
-        on: ({ id, activated }) => service.updateUser(id, { activated: JSON.parse(activated) })
+        on: ({ id, activated }) => service.updateUser(id, { activated: JSON.parse(activated) }),
       }),
     },
     reset: {
       point: setFormEventData({
         items: ['point-id'],
-        on: ({ pointId }) => service.clearPoint(pointId)
+        on: ({ pointId }) => service.clearPoint(pointId),
       }),
     },
   }
@@ -45,7 +45,7 @@ export default async function renderApp() {
       const formEventDatas = eventsByEventName[event][type]
 
       await formEventDatas.emit(form)
-      
+
       refresh()
     })
   })
