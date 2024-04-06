@@ -1,6 +1,6 @@
 import renderUsers from './renderUsers'
 import service from './service'
-import setFormEventData from './setFormEventData'
+import setFormAction from './setFormAction'
 
 async function refresh() {
   const app = document.querySelector('#app')
@@ -12,29 +12,29 @@ async function refresh() {
 export default async function renderApp() {
   await refresh()
 
-  const eventsByEventName = {
+  const formActionByEventAndType = {
     submit: {
-      name: setFormEventData({
+      name: setFormAction({
         items: ['name'],
         on: ({ id, name }) => service.updateUser(id, { name }),
       }),
-      point: setFormEventData({
+      point: setFormAction({
         items: ['point-id', 'point'],
         on: ({ pointId, point }) => service.updatePoint(pointId, +point),
       }),
-      activated: setFormEventData({
+      activated: setFormAction({
         items: ['activated'],
         on: ({ id, activated }) => service.updateUser(id, { activated: JSON.parse(activated) }),
       }),
     },
     reset: {
-      point: setFormEventData({
+      point: setFormAction({
         items: ['point-id'],
         on: ({ pointId }) => service.clearPoint(pointId),
       }),
     },
   }
-  const events = Object.keys(eventsByEventName)
+  const events = Object.keys(formActionByEventAndType)
 
   events.forEach(event => {
     window.addEventListener(event, async e => {
@@ -42,9 +42,9 @@ export default async function renderApp() {
 
       const form = e.target
       const type = form.dataset.type
-      const formEventDatas = eventsByEventName[event][type]
+      const formAction = formActionByEventAndType[event][type]
 
-      await formEventDatas.emit(form)
+      await formAction(form)
 
       refresh()
     })

@@ -1,6 +1,6 @@
 import { camelCase } from 'lodash-es'
 
-export default function setFormEventData({ items, on }) {
+export default function setFormAction({ items, on }) {
   const getItemsValue = form => {
     return items.reduce(
       (acc, item) => ({
@@ -12,7 +12,7 @@ export default function setFormEventData({ items, on }) {
       }
     )
   }
-  const emit = form => on(getItemsValue(form))
+  const action = form => on(getItemsValue(form))
 
-  return { emit }
+  return action
 }
